@@ -1,0 +1,255 @@
+
+Objects/Blink.elf:     file format elf32-avr
+Objects/Blink.elf
+architecture: avr:103, flags 0x00000112:
+EXEC_P, HAS_SYMS, D_PAGED
+start address 0x00000000
+
+Program Header:
+    LOAD off    0x00000074 vaddr 0x00000000 paddr 0x00000000 align 2**1
+         filesz 0x000000e0 memsz 0x000000e0 flags r-x
+    LOAD off    0x00000154 vaddr 0x00803400 paddr 0x000000e0 align 2**0
+         filesz 0x00000000 memsz 0x00000000 flags rw-
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000000  00803400  000000e0  00000154  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000000e0  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .comment      00000030  00000000  00000000  00000154  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000184  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000028  00000000  00000000  000001c4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00001d90  00000000  00000000  000001ec  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00001990  00000000  00000000  00001f7c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000025c  00000000  00000000  0000390c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000034  00000000  00000000  00003b68  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000ddf  00000000  00000000  00003b9c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000000c0  00000000  00000000  0000497b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000018  00000000  00000000  00004a3b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+SYMBOL TABLE:
+00803400 l    d  .data	00000000 .data
+00000000 l    d  .text	00000000 .text
+00000000 l    d  .comment	00000000 .comment
+00000000 l    d  .note.gnu.avr.deviceinfo	00000000 .note.gnu.avr.deviceinfo
+00000000 l    d  .debug_aranges	00000000 .debug_aranges
+00000000 l    d  .debug_info	00000000 .debug_info
+00000000 l    d  .debug_abbrev	00000000 .debug_abbrev
+00000000 l    d  .debug_line	00000000 .debug_line
+00000000 l    d  .debug_frame	00000000 .debug_frame
+00000000 l    d  .debug_str	00000000 .debug_str
+00000000 l    d  .debug_loc	00000000 .debug_loc
+00000000 l    d  .debug_ranges	00000000 .debug_ranges
+00000000 l    df *ABS*	00000000 Main.cpp
+0000003e l       *ABS*	00000000 __SP_H__
+0000003d l       *ABS*	00000000 __SP_L__
+0000003f l       *ABS*	00000000 __SREG__
+00000034 l       *ABS*	00000000 __CCP__
+00000000 l       *ABS*	00000000 __tmp_reg__
+00000001 l       *ABS*	00000000 __zero_reg__
+00000000 l    df *ABS*	00000000 _exit.o
+000000de l       .text	00000000 __stop_program
+0000008c  w      .text	00000000 __vector_22
+0000008c  w      .text	00000000 __vector_28
+0000008c  w      .text	00000000 __vector_1
+00000c00 g       *ABS*	00000000 __DATA_REGION_LENGTH__
+00000000 g       *ABS*	00000000 __TEXT_REGION_ORIGIN__
+00000078 g       .text	00000000 __trampolines_start
+000000e0 g       .text	00000000 _etext
+0000008c  w      .text	00000000 __vector_24
+0000008c  w      .text	00000000 __vector_12
+0000008c g       .text	00000000 __bad_interrupt
+000000e0 g       *ABS*	00000000 __data_load_end
+0000008c  w      .text	00000000 __vector_6
+00000078 g       .text	00000000 __trampolines_end
+0000008c  w      .text	00000000 __vector_3
+0000008c  w      .text	00000000 __vector_23
+000000e0 g       *ABS*	00000000 __data_load_start
+00000078 g       .text	00000000 __dtors_end
+00000400 g       *ABS*	00000000 __LOCK_REGION_LENGTH__
+0000008c  w      .text	00000000 __vector_25
+00008000 g       *ABS*	00000000 __RODATA_PM_OFFSET__
+0000008c  w      .text	00000000 __vector_11
+00000078  w      .text	00000000 __init
+0000008c  w      .text	00000000 __vector_13
+0000008c  w      .text	00000000 __vector_17
+0000008c  w      .text	00000000 __vector_19
+0000008c  w      .text	00000000 __vector_7
+00810000 g       .text	00000000 __eeprom_end
+00000000 g       .text	00000000 __vectors
+0000008c  w      .text	00000000 __vector_27
+00000000  w      .text	00000000 __vector_default
+0000008c  w      .text	00000000 __vector_5
+00000400 g       *ABS*	00000000 __SIGNATURE_REGION_LENGTH__
+00000078 g       .text	00000000 __ctors_start
+0000009e g     F .text	0000003e main
+0000008c  w      .text	00000000 __vector_4
+00803400 g       *ABS*	00000000 __DATA_REGION_ORIGIN__
+00000000  w      *ABS*	00000000 __heap_end
+0000008c  w      .text	00000000 __vector_9
+0000008c  w      .text	00000000 __vector_2
+00000400 g       *ABS*	00000000 __USER_SIGNATURE_REGION_LENGTH__
+0000008c  w      .text	00000000 __vector_21
+0000008c  w      .text	00000000 __vector_15
+0000008c  w      .text	00000000 __vector_29
+00000078 g       .text	00000000 __dtors_start
+00000078 g       .text	00000000 __ctors_end
+00003fff  w      *ABS*	00000000 __stack
+00803400 g       .data	00000000 _edata
+00803400 g       .text	00000000 _end
+0000008c  w      .text	00000000 __vector_8
+0000008c  w      .text	00000000 __vector_26
+000000dc  w      .text	00000000 .hidden exit
+00000100 g       *ABS*	00000000 __EEPROM_REGION_LENGTH__
+000000dc g       .text	00000000 .hidden _exit
+00000090 g     F .text	0000000e Delay(unsigned long)
+0000008c  w      .text	00000000 __vector_14
+0000008c  w      .text	00000000 __vector_10
+0000008c  w      .text	00000000 __vector_16
+0000008c  w      .text	00000000 __vector_18
+0000000a g       *ABS*	00000000 __FUSE_REGION_LENGTH__
+00008000 g       *ABS*	00000000 __TEXT_REGION_LENGTH__
+0000008c  w      .text	00000000 __vector_20
+
+
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 3c 00 	jmp	0x78	; 0x78 <__ctors_end>
+   4:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   8:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  10:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  14:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  18:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  1c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  20:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  24:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  28:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  2c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  30:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  34:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  38:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  3c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  40:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  44:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  48:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  4c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  50:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  54:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  58:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  68:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  6c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  70:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  74:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+
+00000078 <__ctors_end>:
+  78:	11 24       	eor	r1, r1
+  7a:	1f be       	out	0x3f, r1	; 63
+  7c:	cf ef       	ldi	r28, 0xFF	; 255
+  7e:	cd bf       	out	0x3d, r28	; 61
+  80:	df e3       	ldi	r29, 0x3F	; 63
+  82:	de bf       	out	0x3e, r29	; 62
+  84:	0e 94 4f 00 	call	0x9e	; 0x9e <main>
+  88:	0c 94 6e 00 	jmp	0xdc	; 0xdc <_exit>
+
+0000008c <__bad_interrupt>:
+  8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000090 <Delay(unsigned long)>:
+// - Inner loop takes 0.5 uS
+//   - See listing : Takes 7 cycles per inner loop.
+//   - Should result in 2 counts per uSec
+void Delay(uint32_t mS)
+{  do
+   {  wdt_reset();   // To prevent that loop is optimised-away by compiler
+  90:	a8 95       	wdr
+   } while(mS--);
+  92:	61 50       	subi	r22, 0x01	; 1
+  94:	71 09       	sbc	r23, r1
+  96:	81 09       	sbc	r24, r1
+  98:	91 09       	sbc	r25, r1
+  9a:	d0 f7       	brcc	.-12     	; 0x90 <Delay(unsigned long)>
+}
+  9c:	08 95       	ret
+
+0000009e <main>:
+
+// ================================================================================================
+
+int main()
+{
+   CPU_CCP           = CCP_IOREG_gc;  // Unlock Clock control
+  9e:	88 ed       	ldi	r24, 0xD8	; 216
+  a0:	84 bf       	out	0x34, r24	; 52
+   CLKCTRL.MCLKCTRLB = 0x00;          // Prescaler off. Run at full speed
+  a2:	10 92 61 00 	sts	0x0061, r1	; 0x800061 <__RODATA_PM_OFFSET__+0x7f8061>
+
+   PORTB.DIRSET = PIN_LED;            // Enable PB4 output driver
+  a6:	80 e1       	ldi	r24, 0x10	; 16
+  a8:	80 93 21 04 	sts	0x0421, r24	; 0x800421 <__RODATA_PM_OFFSET__+0x7f8421>
+
+   for( ;; )
+   {  PORTB.OUTSET = PIN_LED;         // Set PB4 high (LED ON)
+  ac:	20 e1       	ldi	r18, 0x10	; 16
+  ae:	20 93 25 04 	sts	0x0425, r18	; 0x800425 <__RODATA_PM_OFFSET__+0x7f8425>
+  b2:	81 e4       	ldi	r24, 0x41	; 65
+  b4:	9d e0       	ldi	r25, 0x0D	; 13
+  b6:	a3 e0       	ldi	r26, 0x03	; 3
+  b8:	b0 e0       	ldi	r27, 0x00	; 0
+// - Inner loop takes 0.5 uS
+//   - See listing : Takes 7 cycles per inner loop.
+//   - Should result in 2 counts per uSec
+void Delay(uint32_t mS)
+{  do
+   {  wdt_reset();   // To prevent that loop is optimised-away by compiler
+  ba:	a8 95       	wdr
+  bc:	01 97       	sbiw	r24, 0x01	; 1
+  be:	a1 09       	sbc	r26, r1
+  c0:	b1 09       	sbc	r27, r1
+   } while(mS--);
+  c2:	d9 f7       	brne	.-10     	; 0xba <main+0x1c>
+   PORTB.DIRSET = PIN_LED;            // Enable PB4 output driver
+
+   for( ;; )
+   {  PORTB.OUTSET = PIN_LED;         // Set PB4 high (LED ON)
+      Delay( 200000);
+      PORTB.OUTCLR = PIN_LED;         // Set PB4 low (LED OFF)
+  c4:	20 93 26 04 	sts	0x0426, r18	; 0x800426 <__RODATA_PM_OFFSET__+0x7f8426>
+  c8:	81 e4       	ldi	r24, 0x41	; 65
+  ca:	97 e7       	ldi	r25, 0x77	; 119
+  cc:	ab e1       	ldi	r26, 0x1B	; 27
+  ce:	b0 e0       	ldi	r27, 0x00	; 0
+// - Inner loop takes 0.5 uS
+//   - See listing : Takes 7 cycles per inner loop.
+//   - Should result in 2 counts per uSec
+void Delay(uint32_t mS)
+{  do
+   {  wdt_reset();   // To prevent that loop is optimised-away by compiler
+  d0:	a8 95       	wdr
+  d2:	01 97       	sbiw	r24, 0x01	; 1
+  d4:	a1 09       	sbc	r26, r1
+  d6:	b1 09       	sbc	r27, r1
+   } while(mS--);
+  d8:	d9 f7       	brne	.-10     	; 0xd0 <main+0x32>
+  da:	e9 cf       	rjmp	.-46     	; 0xae <main+0x10>
+
+000000dc <_exit>:
+  dc:	f8 94       	cli
+
+000000de <__stop_program>:
+  de:	ff cf       	rjmp	.-2      	; 0xde <__stop_program>

@@ -1,0 +1,137 @@
+
+avrdude: Version 7.1
+         Copyright the AVRDUDE authors;
+         see https://github.com/avrdudes/avrdude/blob/main/AUTHORS
+
+         System wide configuration file is /etc/avrdude.conf
+         User configuration file is /home/kees/.avrduderc
+         User configuration file does not exist or is not a regular file, skipping
+
+         Using Port                    : /dev/ttyUSB0
+         Using Programmer              : serialupdi
+         Setting bit clk period        : 230400.0
+         AVR Part                      : ATtiny3226
+         RESET disposition             : dedicated
+         RETRY pulse                   : SCK
+         Serial program mode           : yes
+         Parallel program mode         : yes
+         Memory Detail                 :
+
+                                           Block Poll               Page                       Polled
+           Memory Type Alias    Mode Delay Size  Indx Paged  Size   Size #Pages MinW  MaxW   ReadBack
+           ----------- -------- ---- ----- ----- ---- ------ ------ ---- ------ ----- ----- ---------
+           fuse0       wdtcfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse1       bodcfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse2       osccfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse4       tcd0cfg     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse5       syscfg0     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse6       syscfg1     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse7       append      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse8       bootend     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuses                   0     0     0    0 no          9   10      0     0     0 0x00 0x00
+           lock                    0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           tempsense               0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           signature               0     0     0    0 no          3    1      0     0     0 0x00 0x00
+           prodsig                 0     0     0    0 no         61   61      0     0     0 0x00 0x00
+           sernum                  0     0     0    0 no         10    1      0     0     0 0x00 0x00
+           osccal16                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           osccal20                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           osc16err                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           osc20err                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           data                    0     0     0    0 no          0    1      0     0     0 0x00 0x00
+           userrow     usersig     0     0     0    0 no         32   32      0     0     0 0x00 0x00
+           eeprom                  0     0     0    0 no        256   64      0     0     0 0x00 0x00
+           flash                   0     0     0    0 no      32768  128      0     0     0 0x00 0x00
+
+         Programmer Type : serialupdi
+         Description     : SerialUPDI
+
+avrdude: NVM type 0: 16-bit, page oriented write
+avrdude: entering NVM programming mode
+avrdude: AVR device initialized and ready to accept instructions
+avrdude: device signature = 0x1e9527 (probably t3226)
+avrdude: reading fuses memory ...
+avrdude: writing output file fuses-i.hex
+avrdude: leaving NVM programming mode
+
+avrdude done.  Thank you.
+
+
+avrdude: Version 7.1
+         Copyright the AVRDUDE authors;
+         see https://github.com/avrdudes/avrdude/blob/main/AUTHORS
+
+         System wide configuration file is /etc/avrdude.conf
+         User configuration file is /home/kees/.avrduderc
+         User configuration file does not exist or is not a regular file, skipping
+
+         Using Port                    : /dev/ttyUSB0
+         Using Programmer              : serialupdi
+         Setting bit clk period        : 230400.0
+         AVR Part                      : ATtiny3226
+         RESET disposition             : dedicated
+         RETRY pulse                   : SCK
+         Serial program mode           : yes
+         Parallel program mode         : yes
+         Memory Detail                 :
+
+                                           Block Poll               Page                       Polled
+           Memory Type Alias    Mode Delay Size  Indx Paged  Size   Size #Pages MinW  MaxW   ReadBack
+           ----------- -------- ---- ----- ----- ---- ------ ------ ---- ------ ----- ----- ---------
+           fuse0       wdtcfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse1       bodcfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse2       osccfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse4       tcd0cfg     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse5       syscfg0     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse6       syscfg1     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse7       append      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuse8       bootend     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           fuses                   0     0     0    0 no          9   10      0     0     0 0x00 0x00
+           lock                    0     0     0    0 no          1    1      0     0     0 0x00 0x00
+           tempsense               0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           signature               0     0     0    0 no          3    1      0     0     0 0x00 0x00
+           prodsig                 0     0     0    0 no         61   61      0     0     0 0x00 0x00
+           sernum                  0     0     0    0 no         10    1      0     0     0 0x00 0x00
+           osccal16                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           osccal20                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           osc16err                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           osc20err                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+           data                    0     0     0    0 no          0    1      0     0     0 0x00 0x00
+           userrow     usersig     0     0     0    0 no         32   32      0     0     0 0x00 0x00
+           eeprom                  0     0     0    0 no        256   64      0     0     0 0x00 0x00
+           flash                   0     0     0    0 no      32768  128      0     0     0 0x00 0x00
+
+         Programmer Type : serialupdi
+         Description     : SerialUPDI
+
+avrdude: UPDI link initialization OK
+avrdude: NVM type 0: 16-bit, page oriented write
+avrdude: entering NVM programming mode
+avrdude: AVR device initialized and ready to accept instructions
+
+Reading | ################################################## | 100% 0.02s
+
+avrdude: device signature = 0x1e9527 (probably t3226)
+avrdude: Note: flash memory has been specified, an erase cycle will be performed.
+         To disable this feature, specify the -D option.
+avrdude: erasing chip
+avrdude: reading input file Objects/Blink.hex for flash
+         with 308 bytes in 1 section within [0, 0x133]
+         using 3 pages and 76 pad bytes
+avrdude: writing 308 bytes flash ...
+
+Writing | avrdude: padding flash [0x0100, 0x017f]
+################################################## | 100% 0.15s
+
+avrdude: 308 bytes of flash written
+avrdude: verifying flash memory against Objects/Blink.hex
+avrdude: reading on-chip flash data ...
+
+Reading | ################################################## | 100% 0.07s
+
+avrdude: verifying ...
+avrdude: 308 bytes of flash verified
+avrdude: leaving NVM programming mode
+
+avrdude done.  Thank you.
+

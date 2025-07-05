@@ -1,0 +1,583 @@
+<!DOCTYPE HTML>
+<meta charset="utf-8">
+<meta name="keywords" content="AVR, tinyAVR-2, AtTiny3226, AVRGCC, AVRdude, Starting, Toolset, Development, SMT, SMD, Protoboard">
+<link rel="icon" href="Images/TinyMega.svg" type="image/x-icon">
+<link href="TinyMega.css" rel="stylesheet">
+
+<title>Starting with AtTiny3226</title>
+
+
+<style>
+img
+{  display     : inline-block;
+   text-align  : left;
+}
+figure
+{  display     : inline-block;
+}
+</style>
+
+<img src="Images/TinyMega.svg" width="200">
+<p>
+<h1>Starting with AtTiny3226</h1>
+<p>
+The Atmel (now microchip) AVR family is a well-known 8-bit processor family and is used by many people. These chips were readily available in DIP packages, and could be programmed using a cheap AVR-ICSP programmer. Microchip has introduced new families of controllers with improved capabilities and lower prices. These are known as tinyAvr-1 (2016), and tinyAVR-2 (2020). We concentrate here on the AtTiny3226. It seems that all parts within a family group are identical in capabilities but differ only in pin count and memory size.
+<p>
+
+<ol>Contents
+<li><a href="#tinyAVR2">tinyAVR-2 family</a>
+<li><a href="#mounting">Mounting the chips on a board (SMD)</a>
+<li><a href="#WriteSoftware">Write Software for the chips</a>
+<li><a href="#Compile">Compile the software into a .hex file</a>
+<li><a href="#BurnFirmware">Download the .hex file into the chip using UPDI interface</a>
+<li><a href="#FuseBits">Updating fuse-bits in the target</a>
+</ul>
+</ol>
+<p>
+
+<h2 id="tinyAVR2">tinyAVR-2 family</h2>
+<p>
+These new chips have many advantages:
+<ul>As compared with an AtMega328:
+<li>Lower costprice
+<li>More SRAM (3kB)
+<li>Equally large Flash (32kB)
+<li>Smaller footprint SOIC, 1.27mm pitch
+<li>Better peripherals
+</ul>
+<p>
+
+<ul>These tinyAVR-2 chip differ from the older chips so using these chips requires a few changes in your work-flow:
+<li>No DIL packages are available. SMD only.
+<li>New programming method, using UPDI instead of AVR-ICSP.
+<li>Improved peripheral hardware.
+</ul>
+<p>
+There are many ways to start working with such a new controller. This document proposes a method using minimal requirements:
+<ul>
+<li>Just a bare chip, mounted on a prototype PCB.
+<li>A special UPDI connector for downloading firmware and setting fuse-bits.
+<li>Using avrdude as programming utility, requiring a simple USB-Serial interface module.
+<li>A bare avr-gcc command-line compiler.
+<li>A little make script to perform the compile process.
+</ul>
+<p>
+
+<h2 id="mounting">Mounting the chips on a proto-board</h2>
+<p>
+The chips come in a small SOIC-20 package. So mounting it on an 0.1" protoboard is not directly possible.
+<ol>So you have a couple options:
+<li>Use a SOIC to 100mil adapter board, and mount that board on your standard prototype board.
+<li>Use a special prototype board that accepts a mix of THT and SOIC components
+<li>Use a dedicated board designed specifically for your project
+<li>Design your own PCB
+</ol>
+<p>
+Here we use option 2: a special prototype board that supports THT- as well as SOIC components. <a href="https://www.elecrow.com/protoboard-tht-soic-50x80mm.html">Available here.</a>
+<figure>
+<a href="https://www.elecrow.com/protoboard-tht-soic-50x80mm.html">
+   <img src="Images/Protoboard-SOIC-50x80.jpg" width=200px></a>
+<figcaption>Protoboard THT/SOIC</figcaption>
+</figure>
+<p>
+<ul>The controller does not need much in order to get running.
+<li>Power supply, anything between 2 and 5V.
+<li>A programming connector to reach the UPDI pin.
+<li>An LED with a series resistor, in order to show it is running
+</ul>
+<p>
+And that's it. No crystal required. So you can use 17 of the 20 pins for your application.
+<p>
+A minimal application with just a single LED can be built as follows:<br>
+<figure>
+<img src="Images/Tiny3226-Start-Tiny3226-Blink.svg">
+<figcaption>Schematic diagram Tiny3226 Blink-001</figcaption>
+</figure>
+
+<ul>This is all it needs:
+<li>The controller itself, with a bypass capacitor on its power lines.
+<li>A 4-pin UPDI connector for programming.
+<li>An Led with current-limiting resistor.
+</ul>
+<p>
+Once completed, the board may look like:<p>
+<figure>
+<img src="Images/Protoboard-Blink-top.jpg" width=400>
+<figcaption>Top-side with components</figcaption>
+</figure>
+
+<figure>
+<img src="Images/Protoboard-Blink-bottom.jpg" width=400>
+<figcaption>Bottom-side with connections</figcaption>
+</figure>
+
+<p>
+
+<h2 id="WriteSoftware">Writing Software</h2>
+<p>
+<h3>Blink-LED sourcode</h3>
+<p>
+You can write the software using your favorite editor. A small example to blink the LED in above schematic may look like this:
+<a href="Tiny3226-Blink/Main.cpp">Blink-led example : Main.cpp</a>
+<p>
+Let's go through this source-code step by step:
+<p>
+At the top of the file we have the usual includes. No surprises there.
+<pre><code language=C++>#include &lt;avr/io.h&gt;
+#include &lt;avr/wdt.h&gt;
+</code></pre>
+<p>
+Then we define a little delay routine, just counting in a loop. Again nothing special. Please note the wdt_reset() inside the loop. This will prevent that the loop is optimised away by the compiler, and it will keep the watchdog happy (if enabled).
+<pre><code language=C++>void Delay(uint32_t mS)
+{  do
+   {  wdt_reset();   // To prevent that loop is optimised-away by compiler
+   } while(mS--);
+}
+</code></pre>
+<p>
+We are using PB4 to switch the LED. So we better give it a name. I prefer using an enum, especially if there are multiple definitions. Please note the PIN4_bm (Pin 4 bitmap value) that comes from the header file for the Tiny3226.
+<pre><code language=C++>enum PIN_VALUE
+{  // Mapping pin names to bitmap values
+   PIN_LED = PIN4_bm,
+};
+</code></pre>
+<p>
+And then we can write the main function:
+<pre><code language=C++>int main()
+{
+   CPU_CCP           = CCP_IOREG_gc;  // Unlock Clock control
+   CLKCTRL.MCLKCTRLB = 0x00;          // Prescaler off. Run at full speed
+
+   PORTB.DIRSET = PIN_LED;            // Enable PB4 output driver
+
+   for( ;; )
+   {  PORTB.OUTSET = PIN_LED;         // Set PB4 high (LED ON)
+      Delay( 200000);
+      PORTB.OUTCLR = PIN_LED;         // Set PB4 low (LED OFF)
+      Delay(1800000);
+   }
+   return 0;
+}
+</code></pre>
+<p>
+The first 2 lines are needed to get the processor running at max speed. The processor has its prescaler enabled at startup which makes it a bit slow. These 2 instructions will write 0x00 into MCLKCTRLB to switch the prescaler off. But this register is protected against accidental updates, so we need to unlock it first by writing into CPU_CCP.
+<p>
+Next we set our pin to output mode. The tinyAVR-2 chips have nice options to do bit manipulation. A DIRSET register is used to enable the output driver for the LED pin without effecting any other pin in PORTB, as the new value is ORed into PORTB.DIR register.
+<p>
+In the loop, we use the PORTB.OUTSET and PORTB.OUTCLR registers to set and clear the LED pin. Again, only set bits are affected, no worries about any other PINs in the port.
+<p>
+The Delay() function counts down from 1000000 in about half a second so the LED blinks once per second with 2 such delays.
+<p>
+<h3>Where to find the register names?</h3>
+<p>
+The tinyAVR-2 uses new register names to get the hardware going. Most register names match the names in the processor datasheet, but often there are small differences. And the compiler will not accept such differences. You should look-up these registers in the header file for your processor. The header file for this AtTiny3226 is called "tn3226.h" and should be available in the working directory of your avr-gcc compiler. The compiler selects this file through <code>#include &lt;avr/io.h&gt;</code> and the selected CPU type.
+<p>
+
+<p>
+<h2 id="Compile">Compile the software into a Hex file</h2>
+<p>
+<h3>Avr-gcc compiler</h3>
+There are many ways to run a compiler to convert the sourcecode into a .hex file ready for download into the target processor.
+<ul>Examples are:
+<li><a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide">MPLAB X-IDE from microchip</a>
+<li><a href="https://www.microchip.com/en-us/tools-resources/develop/microchip-studio">Atmel studio (now microchip studio)</a>
+<li><a href="https://visualstudio.microsoft.com/downloads/">Visual Studio code</a>
+<li><a href="https://www.arduino.cc/en/software/">Arduino IDE</a> See also <a href="https://github.com/SpenceKonde/megaTinyCore">tinyAvr extension for Arduino by Spence Kondo</a>
+<li><a href="https://platformio.org/platformio-ide">Platformio</a>
+<li>and many more
+</ul>
+<p>
+Here we use a simple make file and a command-line avr-gcc compiler because that is the best way to actually see what is happening. The compiler is available at no cost from several locations on the web, for example <a href="https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers"> from Microchip</a>. Just follow the installation instructions. But there is a good chance that the compiler is already available on your system, for example as part of the Arduino installation.
+<p>
+You can make the compiler accessible from the command-line by adding the compiler location to the PATH environment variable. This can be done as a permanent setting or by using a Setup Script in your project directory. This works both for windows and for Linux systems. To check that you have the correct settings:
+<pre><code>avr-gcc --version
+</code></pre>
+This should start the compiler and print some version details on the console.
+<p>
+On my system (Linux), I have 2 copies of the AVR-gcc compiler. One as a separate download, and one as part of the Arduino installation. A typical compiler installation has the following directory structure:
+<pre>
+├── avr
+├── bin
+├── doc
+├── include
+├── info
+├── lib
+├── lib64
+├── libexec
+├── man
+├── share
+└── x86_64-pc-linux-gnu
+</pre>
+<ul>
+<li>'bin' contains all compiler utilities and should be added to you environment PATH.
+<li>'include' directory contains all AVR header files. Here you can find the headers for all supported targets if you need to search for specific register names. The compiler knows the location of these headers, so no need to include this directory on the compiler commandline.
+<li>'doc' contains documentation, both of the compilers utilities (compiler, linker, objcopy etc) in 'binutils' and of the libc library for your target devices (in libc).
+<li>'lib' contains libraries for all target devices with startup code and libc library functions.
+</ul>
+<p>
+None of the compilers on my system included support for the AtTiny3226. I fixed that by downloading the "Microchip ATtiny Series Device Support" from the <a href="https://packs.download.microchip.com/">Microchip device repository</a>.
+<p>
+
+<h3>Makefile</h3>
+<p>
+We use this makefile for this project. See <a href="Tiny3226-Blink/Makefile"> Make script file : Makefile</a>
+<p>
+In fact, it could just as well be a command-line script. But a Makefile is better at handling macro's and the Makefile syntax is the same on Linux and on Windows. Makefiles have a tendency to become very complicated and unreadable. This makefile example will show that it can be rather simple as well.
+<p>
+This makefile consists of the following sections:
+<p>
+
+<h4>Header comment</h4>
+<pre class="code">
+#
+# Basic Makefile for a small project.
+# Just an example to show all required steps.
+#
+</pre>
+This optional header just contains comments, as indicated by the hash-signs at the start of each line.
+<p>
+
+<h4>Project name macro</h4>
+<p>
+<pre class="code">
+Project     = Blink
+</pre>
+Here we define a macro with the name of the project. This will be used lateron as filename for several generated output files as in $(Project).elf, $(Project).hex and $(Project).lst, translated into 'Blink.elf', 'Blink.hex' and 'Blink.lst' resp.
+<p>
+
+<h4>Device type macro</h4>
+<p>
+<pre class="code">
+DeviceType  = attiny3226
+</pre>
+This macro sets the target device type. This device name must be in lower-case so that it is accepted by avr-gcc as well as by avrdude.
+<p>
+
+<h4>List of source files</h4>
+<p>
+<pre class="code">
+SourceFiles = Main.cpp
+</pre>
+Here we define a macro for a list of source files. At this moment we have only one but you can add additional sourcefiles as your project is growing.
+<p>
+
+<h4>Compiler option macro</h4>
+<p>
+<pre class="code">
+Options  = -mmcu=$(DeviceType)  # Specify target device type
+Options += -Wall                # All warnings enabled
+Options += -g                   # Include Debug info (Needed for source-code in .lst)
+Options += -O2                  # Optimise level 2
+</pre>
+Then a macro to set all compiler options. Each option on a separate line so we can add some comments. As you can see, each line adds a new option to the macro using the += (concatenation) operator.
+<p>
+<ul>Please note
+<li>Only the -mmcu option is mandatory. It uses the 'DeviceType' macro as defined earlier.
+<li> -Wall should be included allways as it gives you a warning on many potential errors in the source-file.
+<li> -g option will include debug info in the .elf file. This makes it possible to include source code in the .lst file.
+<li> -O2 Enables optimisation and reduces code-size quite a bit. But it also makes the assembly listing a bit hard-to-follow.
+<li>The compiler supports many more options. This small set will get you going.
+</ul>
+<p>
+
+<h4>Compiler support for AtTiny3226</h4>
+<p>
+
+<pre class="code">
+Options += -I ~/AvrGcc/Packages/ATtiny_DFP/1.10.348/include
+Options += -B ~/AvrGcc/Packages/ATtiny_DFP/1.10.348/gcc/dev/attiny3226
+</pre>
+Here I add some options to the tinyAVR device packages on my machine. These are not needed if the target device is already integrated in the compiler package.
+<ul>
+<li>The -I tells the compiler where to find the header files.
+<li>The -B option sets the location of target-dependent code. The actual package directory may be different on your machine.
+</ul>
+<p>
+
+<h4>Default Make target </h4>
+<p>
+
+<pre class="code">
+# Do all steps
+All : Objects/$(Project).elf Objects/$(Project).hex Objects/Eeprom.hex Objects/$(Project).lst Update
+</pre>
+This target "All" is the default target for the make utility as it is the first target in the Makefile. No instructions are added so all inputs are generated unconditionally.
+<p>
+
+<h4>Compile and link into .elf</h4>
+<p>
+<pre class="code">
+# Generate .elf file from sources
+Objects/$(Project).elf : $(SourceFiles)
+	mkdir -p Objects
+	avr-gcc $(Options) $(SourceFiles)  -o Objects/$(Project).elf
+</pre>
+Here we define the elf file as target. We place the elf file (and all other generated files) in its own subdirectory (Objects). As you can see, we use the above defined macros to get the list of sourcefiles and the compiler options. Each command-line must start with a &lt;TAB&gt; character in order to be recognised as a command.
+<p>
+The .elf file is generated by the compiler after compiling each source-file into a .obj file and then linking all .obj files into a firmware package. The .elf file (Executable and Linkable Format) contains the firmware and lots more info that is needed to update the firmware.
+<p>
+
+<h4>Extract .hex from .elf</h4>
+<p>
+<pre class="code">
+# Extract firmware .hex file from .elf
+Objects/$(Project).hex  : Objects/$(Project).elf
+	avr-objcopy -O ihex -R .eeprom   Objects/$(Project).elf   Objects/$(Project).hex
+</pre>
+Here we use avr-objcopy to extract a .hex file from the .elf file. This .hex file contains the actual code that can be downloaded into the target device. Note that the "-R .eeprom" is needed to prevent that the .eeprom section is included in the .hex file
+<p>
+
+<h4>Extract eeprom.hex from .elf</h4>
+<p>
+<pre class="code">
+# Extract Eeprom.hex file with eeprom data.
+EepromOptions  = -j .eeprom
+EepromOptions += --set-section-flags=.eeprom=alloc,load
+EepromOptions += --no-change-warnings
+EepromOptions += --change-section-lma .eeprom=0
+Objects/Eeprom.hex : Objects/$(Project).elf
+	avr-objcopy -O ihex $(EepromOptions) Objects/$(Project).elf Objects/Eeprom.hex
+</pre>
+Here we use avr-objcopy to generate a separate .hex file for the eeprom data section. This is only needed if your application has default data to initialise data in an eeprom section. This eeprom data can be loaded into the target device eeprom memory if needed.
+<p>
+
+<h4>Extract listing from .elf</h4>
+<p>
+<pre class="code">
+# Extract listing for examining generated code
+Objects/$(Project).lst : Objects/$(Project).elf
+	avr-objdump -h --demangle -x  -S Objects/$(Project).elf > Objects/$(Project).lst
+</pre>
+Here we use avr-objdump to extract a .lst file from the .elf. This .lst is a text file containing useful information in case you want to see which assembler instructions are generated by the compiler. This works best if you add the -g option to the compiler flags as this includes sourcode statements in the generated .lst file.
+<p>
+The --demangle option will translate the mangled symbol names from the object files back into the original symbol names as in the source files. This is useful for C++ sourcefiles because the compiler 'mangles' symbol names in C++ sources, necessary as the same symbol name can be used for multiple functions (polymorpism and <a href="https://www.w3schools.com/cpp/cpp_function_overloading.asp">C++ function overloading</a>).
+<p>
+
+<h4>Write firmware into target device</h4>
+<p>
+<pre class="code">
+# Write firmware into target processor
+UpdiPort = /dev/ttyUSB0
+UpdiBaud = 115200
+</pre>
+Here  we have a macro for the SerialPort that is used for UPDI. This example works on my Debian-Linux machine. On windows I woud expect something like '//./COM12' as Updi portname.
+<p>
+<pre class="code">
+AvrDude  = avrdude              # avrdude command
+AvrDude += -vv                  # Verbose. Print progress and info. More v's is more data
+AvrDude += -c serialupdi        # Use 'serialupdi' as programmer type
+AvrDude += -p $(DeviceType)     # Specify target device type
+AvrDude += -P $(UpdiPort)       # Comport for UPDI to target
+AvrDude += -B $(UpdiBaud)       # Baudrate for UPDI.
+</pre>
+This macro specifies the avrdude command along with all required fixed options
+
+<p>
+<pre class="code">
+Update :
+	$(AvrDude) -U flash:w:Objects/$(Project).hex:i
+</pre>
+This is the command to use avrdude to download the firmware into the target device. It starts with a macro to call avrdude with most of the -fixed- parameters. And then the Update instruction (with options) to write the .hex file to flash of the target device.
+<p>
+
+<h4>Read fuse bits from target device</h4>
+<p>
+<pre class="code">
+ReadFuses :
+	$(AvrDude) -U fuses:r:Fuses.hex:i
+</pre>
+Here we use the AvrDude macro again, with a request to read fuse bits from the target device. This generates a "Fuses.hex" with the fuse bytes.
+<p>
+
+<h4>Delete all generated code</h4>
+<p>
+<pre class="code">
+# Delete all generated code
+Clean :
+	rm -rf Objects/*
+</pre>
+And finally a 'Clean' command. To remove all files from the 'Objects' subdirectory.
+<p>
+
+<p>
+<h3>Starting the make utility</h3>
+<p>
+
+The make utility is started from the commandline by entering 'make'. This will execute the instructions for the first target in the makefile (All), and all targets that are needed by this target. You can specify the name of the make file using the -f option. The default is 'Makefile' and then it is not needed to specify it (unless it is at some other directory).
+<pre class="code">
+make [-f Makefile ]
+</pre>
+<p>
+It is aso possible to specify a target on the commandline. The make utility will then only execute the code for that specific target (and its pre-requisites).
+<pre class="code">
+make [-f Makefile ] Update
+</pre>
+Is used to just download the firmware, without compilation (if a hex file is present).
+<p>
+<pre class="code">
+make [-f Makefile ] Clean
+</pre>
+Will erase everything in the Objects directory.
+<p>
+<pre class="code">
+make [-f Makefile ] ReadFuses
+</pre>
+Will read the fuse bits from the target controller.
+<p>
+
+
+<h2 id="BurnFirmware">Download the hex file into the chip</h2>
+<p>
+The make-file above uses avrdude to write firmware into the target device. Here I will show what hardware is required to make that work.
+<ul>
+<li>avrdude utility. This may come with your avr-gcc installation. If not, you may <a href="https://github.com/avrdudes/avrdude/">download Avrdude from github</a>.
+<li><a href="https://www.nongnu.org/avrdude/user-manual/avrdude.html">Here you may find the Avrdude user manual.</a>
+<li>A ttl-level serialport between your PC and the target device. The target's UPDI connects to the ttl-level serial port, and the serial-port then connects to your development machine. The easiest way is by using an USB serial port module. You only need RxD and TxD pins. Any USB serialport module will do.
+</ul>
+<p>
+Make sure that the serial port signal levels match with the power supply of the target device. A 'High' signal must be above 2/3 VCC so a 3.3V signal level is not reliable on a processor at 5V.
+<p>
+The USB-Serial-port must be connected to the UPDI connector as follows:
+<figure>
+<img src="Images/Tiny3226-Start.svg">
+<figcaption>Connecting serial port to UPDI</figcaption>
+</figure>
+UPDI is actually a 1-wire serial port. Using half duplex communication. The serial port sends a request, and the Target device sends a response. The UPDI pin at the target has an internal pull-up resistor. And the TxD from the serial port is high (Stop or Idle) when a response is expected.
+<p>
+The avrdude utility has built-in support for such a setup when "-c serialupdi" is selected as programmer. See Makefile in the previous chapter  for the proper command-line.
+<p>
+Make sure to specify the correct UpdiPort in the Makefile.
+<p>
+
+<h2 id="FuseBits">Fuse bits in the AtTiny3226</h2>
+<p>
+Fuse bits are used as option switches for the AtTiny3226. The fuse bits can be updated and will have effect on the working of the chip.
+<p>
+The chip comes with factory-set default values and can be used without changing the fuse bits.
+<p>
+
+<h3>Read fuse bits from target</h3>
+<p>
+The make file contains a script to read the fuse bits into a Fuses.hex file:<br>
+<pre>make ReadFuses</pre>
+<p>
+This results in a Fuses.hex file with the following contents (on a new chip):
+<pre>:09000000<b>00007EFFFFF6FF0000</b>86
+:00000001FF
+</pre>
+<p>
+So the default fuses are 00 00 7E FF FF F6 FF 00 00.
+<p>
+So there are 9 fuse bytes. And the function of these bytes is explained in the <a href="https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/DataSheets/ATtiny3224-3226-3227-Data-Sheet-DS40002345B.pdf">processors datasheet</a>.
+<p>
+<dl>
+<dt>fuse0 Watchdog</dt>
+  <dd>fuse0 controls the system watchdog</dd>
+  <dd>Initial factory value (0x00) has the watchdog disabled.</dd>
+  <dd>The lower 4 bits control the watchdog</dd>
+  <dd><ul>Typical values include:
+        <li>0x00 : Watchdog disabled.
+        <li>
+      </ul>
+  </dd>
+
+<dt>fuse1 brown-out</dt>
+  <dd>fuse1 sets brownout. This will reset the processor when Vcc drops below a selected value.</dd>
+  <dd>Initial factory value (0x00) has the brownout function disabled.</dd>
+  <dd><ul>Typical values include:
+        <li>0x00 : Brown-out disabled.
+        <li>0x05 : Brown-out at 1.8V
+        <li>0x65 : Brown-out at 2.9V
+        <li>0xE5 : Brown-out at 4.3V
+      </ul>
+  </dd>
+
+<dt>fuse2 main clock</dt>
+  <dd>fuse2 sets the main clock oscillator</dd>
+  <dd>Initial factory value (0x7E) selects the 20MHz oscillator.</dd>
+  <dd><ul>Typical values include:
+        <li>0x7E : Calibration registers accessible. Oscillator @ 20 MHz.
+        <li>0x7D : Calibration registers accessible. Oscillator @ 16 MHz.
+      </ul>
+  </dd>
+<dt>fuse3 and fuse 4 are reserved</dt>
+  <dd>Initial factory value (0xFF, 0xFF)</dd>
+<dt>fuse5 syscfg0</dt>
+  <dd><b class=red>Be careful with this byte.</b> It controls ao the function of the reset pin. The default is UPDI so you can use UPDI to update the chips firmware. Once you change this, you will need a 12V pulse to enter UPDI mode. </dd>
+  <dd>Initial factory value (0xF6)</dd>
+  <dd><ul>Typical values include:
+        <li>0xF6 : Low-bit = 0 : Eeprom contents erased during chip erase (i.e. with every firmware update).
+        <li>0xF7 : Low-bit = 1 : Eeprom contents remains unchanged during chip erase.
+      </ul>
+  </dd>
+
+<dt>fuse6 syscfg1</dt>
+  <dd>fuse6 selects a start-up delay after reset</dd>
+  <dd>Initial factory value (0xFF) selects the longest possible delay of 64mS.</dd>
+
+<dt>fuse7 append</dt>
+  <dd>You may reserve part of the flash memory as non-volatile data storage. Here you can select where the application ends - and the nvm-data begins.</dd>
+  <dd>Initial factory value (0x00) (no data section)</dd>
+
+<dt>fuse8 bootend</dt>
+  <dd>You may load a bootloader application at the start of the flash memory. Here you can select the size of the bootloader, and thus the start of the application.</dd>
+  <dd>Initial factory value (0x00). No bootloader.</dd>
+</dl>
+<p>
+
+<h3>Write fuse bits into target</h3>
+<p>
+
+<p>
+Avrdude can read and write the whole set of fuses in a single command, but it may be more convenient to update individual bytes.
+for that we examine the output of avrdude -vv where it prints a list of supported memory sections:
+<pre>
+                                  Block Poll               Page                       Polled
+  Memory Type Alias    Mode Delay Size  Indx Paged  Size   Size #Pages MinW  MaxW   ReadBack
+  ----------- -------- ---- ----- ----- ---- ------ ------ ---- ------ ----- ----- ---------
+  fuse0       wdtcfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  fuse1       bodcfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  fuse2       osccfg      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  fuse4       tcd0cfg     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  fuse5       syscfg0     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  fuse6       syscfg1     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  fuse7       append      0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  fuse8       bootend     0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  fuses                   0     0     0    0 no          9   10      0     0     0 0x00 0x00
+  lock                    0     0     0    0 no          1    1      0     0     0 0x00 0x00
+  tempsense               0     0     0    0 no          2    1      0     0     0 0x00 0x00
+  signature               0     0     0    0 no          3    1      0     0     0 0x00 0x00
+  prodsig                 0     0     0    0 no         61   61      0     0     0 0x00 0x00
+  sernum                  0     0     0    0 no         10    1      0     0     0 0x00 0x00
+  osccal16                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+  osccal20                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+  osc16err                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+  osc20err                0     0     0    0 no          2    1      0     0     0 0x00 0x00
+  data                    0     0     0    0 no          0    1      0     0     0 0x00 0x00
+  userrow     usersig     0     0     0    0 no         32   32      0     0     0 0x00 0x00
+  eeprom                  0     0     0    0 no        256   64      0     0     0 0x00 0x00
+  flash                   0     0     0    0 no      32768  128      0     0     0 0x00 0x00
+</pre>
+
+<p>
+It is not recommended to write all fuses at once, nor to write fuse bytes from a hex file.
+I would prefer to edit the commands in the makefile and to write known values into the fuse bits. Avrdude supports a special function for this. So the best approach is to define a macro with one or more update commands and all avrdude with that macro.
+<p>
+An update-fuse looks like this for avrdude:
+<pre>-U fuse0:w:0x00:m</pre>
+<ul>
+<li><span class="label">-U</span>: Start of a function request
+<li><span class="label">fuse0</span>: name of the memory section to be updated. See memory table above. 'fuse0' can also be updated as 'wdtcfg'
+<li><span class="label">w</span>: Write, so the fuse bits are updated.
+<li><span class="label">0x00</span>: The value written into fuse0, Hexadecimal as indicated by the preceeding '0x'. Normally, this would be the name of a hexfile containing the data, but here it is the actual data itself, as indicated by the 'm' in the last parameter.
+<li><span class="label">m</span>: Data is to be taken as hex-value. And not as a file-mame.
+</ul>
+<p>
+The makefile contains a section to write the factory-default values into the chip. You may want to update the values in this section if you need any changes for your project.
+<p>
+Writing these values into the chip is done from the commandline with:
+<pre>make WriteFuses</pre>
+<p>
+
+<hr>
+<hr>

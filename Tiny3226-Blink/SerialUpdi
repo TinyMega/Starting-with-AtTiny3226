@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Programming UPDI using serialPort only
+# - Tested with FTDI230XS : 34 seconds
+# - Tested with CH340     : 10 seconds
+# - Baudrate setting has not effect.
+#
+# Delay proves to be caused by USB polling latency.
+# - Switch to low-latency to get better performance
+# - setserial /dev/ttyUSB0 low_latency
+
+
+#--------------------+     Bat85                          +-----------
+#             TxD >--+-------|<---+                       |
+#                    |            |                       |
+#             RxD <--+------------+-----------------------+---- UPDI
+#                    |                                    |
+#             Gnd ---+------------------------------------+---- Gnd
+#--------------------+                                    +-----------
+#   USB serialPort                                           Target controller
+
+Baudrate=230400
+ComPort=/dev/ttyUSB0
+
+Firmware="Objects/Blink.hex"
+
+# Fully supported by avrdude:
+#
+# -c serialupdi     : Use simple SerialPort as UPDI programmer
+# -p t3226          : Device to be programmed
+# -P /dev/ttyUSB0   : Actual serial Port used as programmer
+# -B 230400         : Baudrate.
+# -U                : Job to be performed
+#
+# To get better performance
+# - Must be done after each reconnect of USB-SerialPort
+setserial $ComPort low_latency
+
+# avrdude -v -c serialupdi -p t3226 -P $ComPort -B $Baudrate flash:r:l.hex:i
+# avrdude -v -c serialupdi -p t3226 -P $ComPort -B $Baudrate -U eeprom:r:e.hex:i
+avrdude -v -c serialupdi -p t3226 -P $ComPort -B $Baudrate -U fuses:r:fuses-i.hex:i
+# avrdude -v -c serialupdi -p t3226 -P $ComPort -B $Baudrate -U fuses:r:fuses-m.hex:m
+
+# avrdude -v  -c serialupdi -p t3226 -P $ComPort -B $Baudrate -U fuses:w:0x0B,0x66,0x02,0xFF,0x00,0xF6,0x07,0x00,0x02:m
+avrdude -vv -c serialupdi -p t3226 -P $ComPort -B $Baudrate -U flash:w:$Firmware:i

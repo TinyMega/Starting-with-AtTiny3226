@@ -1,0 +1,15 @@
+:090000000B6602FF00F607000286
+:00000001FF
+
+Fuses : 0B 66 02 FF 00 F6 07 00 02
+----------- -------- ---- ----- ----- ---- ------ ------ ---- ------ ----- ----- ---------
+ fuse0 wdtcfg  0B (0000 1011)    : Watchdog window 0, period B (Watchdog enabled, 8 Seconds):
+ fuse1 bodcfg  66 (010 0 01 01)  : Brown-out: Level 010 (2.6V), Sample 0 (1kHz), Active 01 (Enabled), Sleep 10 (Sampled)
+ fuse2 osccfg  02 (0 ..... 10)   : Oscillator calibration accessible, Clock at 16MHz.
+
+ fuse4 tcd0cfg 00                : ???
+ fuse5 syscfg0 F6 (11 1 1 01 10) : No CRC, Timeout disabled, Reset pin is UPDI, Eeprom erased by chip erase
+ fuse6 syscfg1 07 (00000111)     : Start-up delay 64mS
+
+ fuse7 append  00 (00000000)     : App-End section 0x00 : All availabe flash from Bootend
+ fuse8 bootend 02 (00000010)     : Bootloader ends at 0x0200.

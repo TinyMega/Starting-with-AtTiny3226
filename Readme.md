@@ -1,9 +1,15 @@
+![Alt text](Images/TinyMega.svg)
+
 # Getting started with AtTiny3226
 
-![Alt text](Images/TinyMega.svg)
+This project will show you how to get started with a tinyAVR-2 processor, specifically an AtTiny3226.
+We will be using basic tools:
+- avrgcc compiler
+- make utility
+- avrdude firmware utility
+- prototype pcb board
+- usb to serial-port
 
 [See documentation](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html)
 
-
-[See documentation @ Github](https://htmlpreview.github.io/?https://github.com/deKees687/Starting-with-AtTiny3226/blob/main/StartingTiny3226.html)
 

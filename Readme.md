@@ -47,9 +47,11 @@ Using an easy-to-use make script with step-by-step explanation of each section.
 Using avrdude and an USB-serialport
 - Required hardware
 - How to connect
+- Using serialupdi protocol
 
 ## Explanation of processor fuses
 
 - What do they mean
 - How can you change them
 
+[See full project documentation](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html)

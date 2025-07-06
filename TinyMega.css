@@ -1,1 +1,141 @@
-../../../Documents/Templates/TinyMega.css
+body
+{  counter-reset     : Level1;
+   max-width         : 60em;
+   margin            : auto;
+}
+
+H1:before
+{  content: counter(Level1) ". ";
+   counter-increment : Level1;
+}
+
+H1
+{  counter-reset     : Level2;
+}
+
+H2:before
+{  content: counter(Level1) "." counter(Level2) ". ";
+   counter-increment : Level2;
+}
+
+H2
+{  counter-reset     : Level3;
+}
+
+H3:before
+{  content: counter(Level1) "." counter(Level2) "." counter(Level3) ". ";
+   counter-increment : Level3;
+}
+
+H3
+{  counter-reset     : Level4;
+}
+
+H4:before
+{  content: counter(Level1) "." counter(Level2) "." counter(Level3) "." counter(Level4) ". ";
+   counter-increment : Level4;
+}
+
+p
+{  margin-bottom : 0px;
+}
+
+pre
+{  border      : 1px solid;
+   font-family : "courier new", monospace;
+   font-size   : 1 em;
+   background  : rgb(240,240,255);
+   margin      : 5px 5px 5px 5px;
+   padding     : 0px 5px 0px 5px;
+}
+
+table
+{  margin        : 0px;
+   padding       : 0px;
+   background    : yellow;
+   cellspacing   : 0px;
+   border-collapse : collapse;
+}
+
+tr
+{  margin  : 0px;
+   padding : 0px;
+}
+
+td
+{  vertical-align: top;
+   text-align    : left;
+   margin        : 0px;
+   padding       : 0px 5px 0px 5px;
+   border        : solid 1px;
+   background    : rgb(240,240,240);
+}
+
+td.header
+{  text-align    : center;
+   background    : rgb(255,240,240);
+}
+
+td.Numeric
+{  text-align    : right;
+}
+
+ul,ol
+{  margin-top    : 0px;
+   margin-left   : 0px;
+   padding       : 0px;
+   margin-bottom : 0px;
+}
+
+li
+{  margin-left : 30px;
+   padding     : 0px;
+}
+
+div.columns
+{  /* Several browsers need a prefix for the column attributes. */
+
+   /* Chrome, Safari, Opera */
+   -webkit-column-count   : 2;
+   -webkit-column-gap     : 2em;
+   -webkit-column-rule    : 1px solid blue;
+   -webkit-column-width   : 15em;
+
+    /* Firefox */
+   -moz-column-count : 2;
+   -moz-column-gap   : 2em;
+   -moz-column-rule  : 1px solid blue;
+   -moz-column-width : 15em;
+
+   /* Others */
+   column-count : 2;
+   column-gap   : 2em;
+   column-rule  : 4px solid blue;
+   column-width : 15em;
+
+   text-align   : justify;
+}
+
+div.image
+{  display : inline-block;
+}
+div.caption
+{  text-align : center;
+}
+
+dt
+{  font-weight : bold;
+   margin-top  : 0.5em;
+}
+dd
+{  margin-top  : 0.5em;
+}
+
+figcaption
+{  text-align:center;
+}
+
+span.label
+{  display : inline-block;
+   width   : 3em;
+}

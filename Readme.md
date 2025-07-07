@@ -7,7 +7,7 @@ We will be using basic tools:
 - avrgcc compiler
 - make utility
 - avrdude firmware utility
-- prototype pcb board
+- [prototype pcb board](https://www.elecrow.com/protoboard-tht-soic-50x80mm.html)
 - usb to serial-port
 
 [See full documentation](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html)

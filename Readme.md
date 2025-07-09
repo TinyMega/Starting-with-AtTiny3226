@@ -14,6 +14,7 @@ We will be using basic tools:
 
 # Project summary
 
+---
 ## Avrgcc compiler
 
 - Where to get the compiler
@@ -21,6 +22,7 @@ We will be using basic tools:
 
  [See details](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html#Compile)
 
+---
 ## Mounting a processor on a protoboard
 
 - Schematic diagram
@@ -30,6 +32,7 @@ We will be using basic tools:
 
  [See details](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html#mounting)
 
+---
 ## Sourcecode for Blink-led
 
 - Full sourcecode
@@ -37,6 +40,7 @@ We will be using basic tools:
 
  [See details](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html#WriteSoftware)
 
+---
 ## Project Make file
 
 Using an easy-to-use make script with step-by-step explanation of each section.
@@ -50,6 +54,7 @@ Using an easy-to-use make script with step-by-step explanation of each section.
 
  [See details](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html#Makefile)
 
+---
 ## Downloading firmware into target
 
 Using avrdude and an USB-serialport
@@ -59,6 +64,7 @@ Using avrdude and an USB-serialport
 
  [See details](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html#BurnFirmware)
 
+---
 ## Explanation of processor fuses
 
 - What do they mean
@@ -67,3 +73,5 @@ Using avrdude and an USB-serialport
  [See details](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html#FuseBits)
 
  [See full project documentation](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html)
+
+---

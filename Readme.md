@@ -19,6 +19,8 @@ We will be using basic tools:
 - Where to get the compiler
 - How to set it up
 
+ [See details]((https://www.elecrow.com/protoboard-tht-soic-50x80mm.html#Compile))
+
 ## Mounting a processor on a protoboard
 
 - Schematic diagram
@@ -26,10 +28,14 @@ We will be using basic tools:
 - UPDI connector for programming
 - Example protoboard
 
+ [See details]((https://www.elecrow.com/protoboard-tht-soic-50x80mm.html#mounting))
+
 ## Sourcecode for Blink-led
 
 - Full sourcecode
 - Detailed explanation per section.
+
+ [See details]((https://www.elecrow.com/protoboard-tht-soic-50x80mm.html#WriteSoftware))
 
 ## Project Make file
 
@@ -42,6 +48,8 @@ Using an easy-to-use make script with step-by-step explanation of each section.
 - Write firmware into target
 - Update fuses in target
 
+ [See details]((https://www.elecrow.com/protoboard-tht-soic-50x80mm.html#Makefile))
+
 ## Downloading firmware into target
 
 Using avrdude and an USB-serialport
@@ -49,9 +57,13 @@ Using avrdude and an USB-serialport
 - How to connect
 - Using serialupdi protocol
 
+ [See details]((https://www.elecrow.com/protoboard-tht-soic-50x80mm.html#BurnFirmware))
+
 ## Explanation of processor fuses
 
 - What do they mean
 - How can you change them
 
-[See full project documentation](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html)
+ [See details]((https://www.elecrow.com/protoboard-tht-soic-50x80mm.html#FuseBits))
+
+ [See full project documentation](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html)

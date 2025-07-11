@@ -18,7 +18,7 @@ Options += -I ~/AvrGcc/Packages/ATtiny_DFP/1.10.348/include
 Options += -B ~/AvrGcc/Packages/ATtiny_DFP/1.10.348/gcc/dev/attiny3226
 
 # Do all steps
-All : Objects/$(Project).elf Objects/$(Project).hex Objects/Eeprom.hex Objects/$(Project).lst Update
+All : Objects/$(Project).elf Objects/$(Project).hex Objects/Eeprom.hex Objects/$(Project).lst Size Update
 
 # Generate .elf file from sources
 Objects/$(Project).elf : $(SourceFiles)
@@ -51,6 +51,11 @@ AvrDude += -c serialupdi        # Use 'serialupdi' as programmer type
 AvrDude += -p $(DeviceType)     # Specify target device type
 AvrDude += -P $(UpdiPort)       # Comport for UPDI to target
 AvrDude += -B $(UpdiBaud)       # Baudrate for UPDI to target
+
+# Print memory-size of generated firmware
+Size :
+	avr-size Objects/$(Project).elf
+
 
 # Write firmware
 Update :

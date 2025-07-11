@@ -354,6 +354,16 @@ Here we use avr-objdump to extract a .lst file from the .elf. This .lst is a tex
 The --demangle option will translate the mangled symbol names from the object files back into the original symbol names as in the source files. This is useful for C++ sourcefiles because the compiler 'mangles' symbol names in C++ sources, necessary as the same symbol name can be used for multiple functions (polymorpism and <a href="https://www.w3schools.com/cpp/cpp_function_overloading.asp">C++ function overloading</a>).
 <p>
 
+<h4>Print size of used memory sections</h4>
+<p>
+<pre class="code">
+Size :
+	avr-size Objects/$(Project).elf
+</pre>
+<p>
+Use avr-size to extract memory usage from the .elf file.
+<p>
+
 <h4>Write firmware into target device</h4>
 <p>
 <pre class="code">
@@ -361,7 +371,7 @@ The --demangle option will translate the mangled symbol names from the object fi
 UpdiPort = /dev/ttyUSB0
 UpdiBaud = 115200
 </pre>
-Here  we have a macro for the SerialPort that is used for UPDI. This example works on my Debian-Linux machine. On windows I woud expect something like '//./COM12' as Updi portname.
+Here  we have a macro for the SerialPort that is used for UPDI. This example works on my Debian-Linux machine. On windows I would expect something like '//./COM12' as Updi portname.
 <p>
 <pre class="code">
 AvrDude  = avrdude              # avrdude command

@@ -31,11 +31,12 @@ The Atmel (now microchip) AVR family is a well-known 8-bit processor family and 
 <li><a href="#Compile">Compile the software into a .hex file</a>
 <li><a href="#BurnFirmware">Download the .hex file into the chip using UPDI interface</a>
 <li><a href="#FuseBits">Updating fuse-bits in the target</a>
+<li><a href="#Progmem">Who needs PROGMEM</a>
 </ul>
 </ol>
 <p>
 
-<h2 id="tinyAVR2">tinyAVR-2 family</h2>
+<h1 id="tinyAVR2">tinyAVR-2 family</h1>
 <p>
 These new chips have many advantages:
 <ul>As compared with an AtMega328:
@@ -44,6 +45,8 @@ These new chips have many advantages:
 <li>Equally large Flash (32kB)
 <li>Smaller footprint SOIC, 1.27mm pitch
 <li>Better peripherals
+<li>Flash memory is accessible from data-space (No more PROGMEM).
+<li>Single-pin in-circuit programming (UPDI)
 </ul>
 <p>
 
@@ -63,7 +66,7 @@ There are many ways to start working with such a new controller. This document p
 </ul>
 <p>
 
-<h2 id="mounting">Mounting the chips on a proto-board</h2>
+<h1 id="mounting">Mounting the chips on a proto-board</h1>
 <p>
 The chips come in a small SOIC-20 package. So mounting it on an 0.1" protoboard is not directly possible.
 <ol>So you have a couple options:
@@ -114,9 +117,9 @@ Once completed, the board may look like:<p>
 
 <p>
 
-<h2 id="WriteSoftware">Writing Software</h2>
+<h1 id="WriteSoftware">Writing Software</h1>
 <p>
-<h3>Blink-LED sourcode</h3>
+<h2>Blink-LED sourcode</h2>
 <p>
 You can write the software using your favorite editor. A small example to blink the LED in above schematic may look like this:
 <a href="Tiny3226-Blink/Main.cpp">Blink-led example : Main.cpp</a>
@@ -169,15 +172,15 @@ In the loop, we use the PORTB.OUTSET and PORTB.OUTCLR registers to set and clear
 <p>
 The Delay() function counts down from 1000000 in about half a second so the LED blinks once per second with 2 such delays.
 <p>
-<h3>Where to find the register names?</h3>
+<h2>Where to find the register names?</h2>
 <p>
 The tinyAVR-2 uses new register names to get the hardware going. Most register names match the names in the processor datasheet, but often there are small differences. And the compiler will not accept such differences. You should look-up these registers in the header file for your processor. The header file for this AtTiny3226 is called "tn3226.h" and should be available in the working directory of your avr-gcc compiler. The compiler selects this file through <code>#include &lt;avr/io.h&gt;</code> and the selected CPU type.
 <p>
 
 <p>
-<h2 id="Compile">Compile the software into a Hex file</h2>
+<h1 id="Compile">Compile the software into a Hex file</h1>
 <p>
-<h3>Avr-gcc compiler</h3>
+<h2>Avr-gcc compiler</h2>
 There are many ways to run a compiler to convert the sourcecode into a .hex file ready for download into the target processor.
 <ul>Examples are:
 <li><a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide">MPLAB X-IDE from microchip</a>
@@ -185,11 +188,15 @@ There are many ways to run a compiler to convert the sourcecode into a .hex file
 <li><a href="https://visualstudio.microsoft.com/downloads/">Visual Studio code</a>
 <li><a href="https://www.arduino.cc/en/software/">Arduino IDE</a> See also <a href="https://github.com/SpenceKonde/megaTinyCore">tinyAvr extension for Arduino by Spence Kondo</a>
 <li><a href="https://platformio.org/platformio-ide">Platformio</a>
+<li><a href="https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers">Commandline AvrGcc compiler</a>
 <li>and many more
 </ul>
 <p>
 Here we use a simple make file and a command-line avr-gcc compiler because that is the best way to actually see what is happening. The compiler is available at no cost from several locations on the web, for example <a href="https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers"> from Microchip</a>. Just follow the installation instructions. But there is a good chance that the compiler is already available on your system, for example as part of the Arduino installation.
 <p>
+Compiler documentation can be found by the creators of the compiler. <a href="https://gcc.gnu.org/wiki/avr-gcc">See avr-gcc at gnu.org</a>
+<p>
+
 You can make the compiler accessible from the command-line by adding the compiler location to the PATH environment variable. This can be done as a permanent setting or by using a Setup Script in your project directory. This works both for windows and for Linux systems. To check that you have the correct settings:
 <pre><code>avr-gcc --version
 </code></pre>
@@ -219,7 +226,7 @@ On my system (Linux), I have 2 copies of the AVR-gcc compiler. One as a separate
 None of the compilers on my system included support for the AtTiny3226. I fixed that by downloading the "Microchip ATtiny Series Device Support" from the <a href="https://packs.download.microchip.com/">Microchip device repository</a>.
 <p>
 
-<h3>Makefile</h3>
+<h1 id="Makefile">Makefile</h1>
 <p>
 We use this makefile for this project. See <a href="Tiny3226-Blink/Makefile"> Make script file : Makefile</a>
 <p>
@@ -228,7 +235,7 @@ In fact, it could just as well be a command-line script. But a Makefile is bette
 This makefile consists of the following sections:
 <p>
 
-<h4>Header comment</h4>
+<h2>Header comment</h2>
 <pre class="code">
 #
 # Basic Makefile for a small project.
@@ -238,7 +245,7 @@ This makefile consists of the following sections:
 This optional header just contains comments, as indicated by the hash-signs at the start of each line.
 <p>
 
-<h4>Project name macro</h4>
+<h2>Project name macro</h2>
 <p>
 <pre class="code">
 Project     = Blink
@@ -246,7 +253,7 @@ Project     = Blink
 Here we define a macro with the name of the project. This will be used lateron as filename for several generated output files as in $(Project).elf, $(Project).hex and $(Project).lst, translated into 'Blink.elf', 'Blink.hex' and 'Blink.lst' resp.
 <p>
 
-<h4>Device type macro</h4>
+<h2>Device type macro</h2>
 <p>
 <pre class="code">
 DeviceType  = attiny3226
@@ -254,7 +261,7 @@ DeviceType  = attiny3226
 This macro sets the target device type. This device name must be in lower-case so that it is accepted by avr-gcc as well as by avrdude.
 <p>
 
-<h4>List of source files</h4>
+<h2>List of source files</h2>
 <p>
 <pre class="code">
 SourceFiles = Main.cpp
@@ -262,7 +269,7 @@ SourceFiles = Main.cpp
 Here we define a macro for a list of source files. At this moment we have only one but you can add additional sourcefiles as your project is growing.
 <p>
 
-<h4>Compiler option macro</h4>
+<h2>Compiler option macro</h2>
 <p>
 <pre class="code">
 Options  = -mmcu=$(DeviceType)  # Specify target device type
@@ -281,7 +288,7 @@ Then a macro to set all compiler options. Each option on a separate line so we c
 </ul>
 <p>
 
-<h4>Compiler support for AtTiny3226</h4>
+<h2>Compiler support for AtTiny3226</h2>
 <p>
 
 <pre class="code">
@@ -295,7 +302,7 @@ Here I add some options to the tinyAVR device packages on my machine. These are 
 </ul>
 <p>
 
-<h4 id="Makefile">Default Make target </h4>
+<h2>Default Make target </h2>
 <p>
 
 <pre class="code">
@@ -305,7 +312,7 @@ All : Objects/$(Project).elf Objects/$(Project).hex Objects/Eeprom.hex Objects/$
 This target "All" is the default target for the make utility as it is the first target in the Makefile. No instructions are added so all inputs are generated unconditionally.
 <p>
 
-<h4>Compile and link into .elf</h4>
+<h2>Compile and link into .elf</h2>
 <p>
 <pre class="code">
 # Generate .elf file from sources
@@ -318,7 +325,7 @@ Here we define the elf file as target. We place the elf file (and all other gene
 The .elf file is generated by the compiler after compiling each source-file into a .obj file and then linking all .obj files into a firmware package. The .elf file (Executable and Linkable Format) contains the firmware and lots more info that is needed to update the firmware.
 <p>
 
-<h4>Extract .hex from .elf</h4>
+<h2>Extract .hex from .elf</h2>
 <p>
 <pre class="code">
 # Extract firmware .hex file from .elf
@@ -328,7 +335,7 @@ Objects/$(Project).hex  : Objects/$(Project).elf
 Here we use avr-objcopy to extract a .hex file from the .elf file. This .hex file contains the actual code that can be downloaded into the target device. Note that the "-R .eeprom" is needed to prevent that the .eeprom section is included in the .hex file
 <p>
 
-<h4>Extract eeprom.hex from .elf</h4>
+<h2>Extract eeprom.hex from .elf</h2>
 <p>
 <pre class="code">
 # Extract Eeprom.hex file with eeprom data.
@@ -342,7 +349,7 @@ Objects/Eeprom.hex : Objects/$(Project).elf
 Here we use avr-objcopy to generate a separate .hex file for the eeprom data section. This is only needed if your application has default data to initialise data in an eeprom section. This eeprom data can be loaded into the target device eeprom memory if needed.
 <p>
 
-<h4>Extract listing from .elf</h4>
+<h2>Extract listing from .elf</h2>
 <p>
 <pre class="code">
 # Extract listing for examining generated code
@@ -354,7 +361,7 @@ Here we use avr-objdump to extract a .lst file from the .elf. This .lst is a tex
 The --demangle option will translate the mangled symbol names from the object files back into the original symbol names as in the source files. This is useful for C++ sourcefiles because the compiler 'mangles' symbol names in C++ sources, necessary as the same symbol name can be used for multiple functions (polymorpism and <a href="https://www.w3schools.com/cpp/cpp_function_overloading.asp">C++ function overloading</a>).
 <p>
 
-<h4>Print size of used memory sections</h4>
+<h2>Print size of used memory sections</h2>
 <p>
 <pre class="code">
 Size :
@@ -364,7 +371,7 @@ Size :
 Use avr-size to extract memory usage from the .elf file.
 <p>
 
-<h4>Write firmware into target device</h4>
+<h2>Write firmware into target device</h2>
 <p>
 <pre class="code">
 # Write firmware into target processor
@@ -391,7 +398,7 @@ Update :
 This is the command to use avrdude to download the firmware into the target device. It starts with a macro to call avrdude with most of the -fixed- parameters. And then the Update instruction (with options) to write the .hex file to flash of the target device.
 <p>
 
-<h4>Read fuse bits from target device</h4>
+<h2>Read fuse bits from target device</h2>
 <p>
 <pre class="code">
 ReadFuses :
@@ -400,7 +407,7 @@ ReadFuses :
 Here we use the AvrDude macro again, with a request to read fuse bits from the target device. This generates a "Fuses.hex" with the fuse bytes.
 <p>
 
-<h4>Delete all generated code</h4>
+<h2>Delete all generated code</h2>
 <p>
 <pre class="code">
 # Delete all generated code
@@ -411,7 +418,7 @@ And finally a 'Clean' command. To remove all files from the 'Objects' subdirecto
 <p>
 
 <p>
-<h3>Starting the make utility</h3>
+<h2>Starting the make utility</h2>
 <p>
 
 The make utility is started from the commandline by entering 'make'. This will execute the instructions for the first target in the makefile (All), and all targets that are needed by this target. You can specify the name of the make file using the -f option. The default is 'Makefile' and then it is not needed to specify it (unless it is at some other directory).
@@ -437,7 +444,7 @@ Will read the fuse bits from the target controller.
 <p>
 
 
-<h2 id="BurnFirmware">Download the hex file into the chip</h2>
+<h1 id="BurnFirmware">Download the hex file into the chip</h1>
 <p>
 The make-file above uses avrdude to write firmware into the target device. Here I will show what hardware is required to make that work.
 <ul>
@@ -460,14 +467,14 @@ The avrdude utility has built-in support for such a setup when "-c serialupdi" i
 Make sure to specify the correct UpdiPort in the Makefile.
 <p>
 
-<h2 id="FuseBits">Fuse bits in the AtTiny3226</h2>
+<h1 id="FuseBits">Fuse bits in the AtTiny3226</h1>
 <p>
 Fuse bits are used as option switches for the AtTiny3226. The fuse bits can be updated and will have effect on the working of the chip.
 <p>
 The chip comes with factory-set default values and can be used without changing the fuse bits.
 <p>
 
-<h3>Read fuse bits from target</h3>
+<h2>Read fuse bits from target</h2>
 <p>
 The make file contains a script to read the fuse bits into a Fuses.hex file:<br>
 <pre>make ReadFuses</pre>
@@ -536,7 +543,7 @@ So there are 9 fuse bytes. And the function of these bytes is explained in the <
 </dl>
 <p>
 
-<h3>Write fuse bits into target</h3>
+<h2>Write fuse bits into target</h2>
 <p>
 
 <p>
@@ -586,9 +593,86 @@ An update-fuse looks like this for avrdude:
 <p>
 The makefile contains a section to write the factory-default values into the chip. You may want to update the values in this section if you need any changes for your project.
 <p>
-Writing these values into the chip is done from the commandline with:
+Writing these values into the chip is done from the command-line with:
 <pre>make WriteFuses</pre>
 <p>
+
+<h1 id="Progmem">Who needs PROGMEM and PSTR?</h1>
+<p>
+First the good news: PROGMEM is no longer required for tinyAVR-2 processors such as this AtTiny3226. Const data literals are no longer mapped to the precious SRAM data area and reside in flash only. This is a major improvement over legacy AVR processors.
+<p>
+Please note: It is still possible to use PROGMEM and PSTR(), as you did with legacy AVR processors. That will still work on the AtTiny3226. It is just no longer required, and the effects are also slightly different.
+<p>
+The bad news is that you still need PROGMEM and PSTR for all functions that use pgm_read.. library functions. Removing PROGMEM, PSTR, and pgm_read..()  will result in programs that work just fine on tinyAVR-2 processors, and will fail on legacy AVRs. So you may choose to continue with PROGMEM, PSTR, and pgm_read() in libraries that should work on both processor families.
+<p>
+<h2>tinyAVR-2 memory map</h2>
+<p>
+The AVR architecture has 2 distinct address area's, one for program space and one for address space. The AVR architectory remains largely the same, but new is the mapping of flash memory into the upper region of the data space. Older AVR processors do not support this mapping so the compiler must treat progmem data very differently.
+<figure>
+<img src="Images/MemoryMap.svg">
+<figcaption>tinyAVR-2 memory map</figcaption>
+</figure>
+<p>
+Both address area's are kept separate within the processor hardware. Each address space has a range of 0x0000 to 0xFFFF, buth they contains different data. The  firmware resides in program space, and data resides in data space. It is possible to read data from program space, but only through special instructions (LPM, as used in the &lt;avr/pgmspace.h&gt; library). Normal data access uses data space only (LD, ST etc).
+<p>
+Most programs use pointers. And a pointer is in essence just a 16-bit variable, with a value in the range 0x0000 .. 0xFFFF. You can use the pointer to read from data space, and you can use the same pointer to read from program space, and that will return very different data. For example a pointer value 0x0000 in program space accesses the reset vector of the firmware, while 0x0000 in data space gives the CPU register R0.
+<p>
+The pointer itself does now know the difference between program space and data space. The difference depends solely on how you use the pointer. In normal cases, the pointer is handled as a pointer into data space. If you want to access program space, then you must use dedicated library functions as defined in &lt;avr/pgmspace.h&gt;.
+<p>
+What about pointer types? In your program you can define progmem pointers and data pointers. For example a "char *pText" is a pointer to a character in data space, while a "PGM_P pText" is a pointer to a char in program space. But be aware, this pointer type is only known by the compiler at compile time, and not by the processor. The compiler may use this info to automatically insert pgm_read...() functions.
+
+<p>
+<h2>const data</h2>
+
+<p>
+<h3>Consider a string</h3>
+<p>
+<pre class="code">char Welcome[] = "Hello world"; </pre>
+<p>
+Here we have an array of 12 chars and this array is placed in data space by the compiler. This is necessary because the application may change the text during running of the firmware. The string literal "Hello world" resides in program space, and is copied into the char array in dataspace during startup of the application.
+<p>
+So this example takes 12 bytes in data space (SRAM) and 12 bytes in program space. No surprises here. The same for legacy AVR and new tinyAVR-2.
+
+<p>
+<h3>Now lets make the buffer const</h3>
+<p>
+<pre class="code">const char Welcome[] = "Hello world"; </pre>
+<p>
+<dl><dt>On a legacy AVR</dt>
+    <dd>On a legacy AVR, adding const makes no big difference. The buffer is still allocated in dataspace, and initialised during startup. This is necessary because that is the only way to make the data accessible for the program. User program can change the data simply by using a cast to remove const, and then changing the contents of the buffer. This statement still results in 12 bytes in data space and 12 bytes in program space.</dd>
+    <dt>On a tinyAVR-2</dt>
+    <dd> But on a tinyAVR-2, this is no longer required. The entire string is moved into program space and becomes visible in the high-memory region in dataspace. Changing of the data will require special procedures as the string is now located in flash.
+    </dd>
+<p>
+
+<p>
+<h3>Now consider a string pointer</h3>
+<p>
+<pre class="code">const char *Welcome = "Hello world"; </pre>
+<p>
+<dl><dt>On a legacy AVR</dt>
+    <dd>This example results in a pointer in data space (SRAM), and a string literal also in data space, initialised from a string literal in program space</dd>
+    <dd>This will take 14 bytes in dataspace (2 bytes for the pointer, 12 bytes for the string), and 12 bytes in program space. The compiler will still reserve 12 bytes in SRAM and initialise this buffer with the string literal from program space.<dd>
+    <dd>The pointer will be initialised with the address of the string in data space. And will get a value in the range 0x3400- 0x3FFF (SRAM address in data space), or (0x0100 - 0x08FF on an ATMEGA328).
+    </dd>
+    <dt>On a tinyAVR-2</dt>
+    <dd>This results in 2 bytes in SRAM (only a pointer), and 12 bytes in program space.</dd>
+    <dd>The actual string literal will be placed somewhere in the flash area of program space (address range 0x0000-0x7FFF), but the pointer will be initialised with the same address + 0x8000, as this is the address of the same string in data space.
+</dl>
+
+<p>
+<h3>And a PSTR pointer</h3>
+<p>
+<pre class="code">const char *Welcome = PSTR("Hello world"); </pre>
+<p>
+This example results in a pointer in data space (SRAM), and a string literal in program space.
+<dl><dt>On a legacy AVR and on tinyAVR-2</dt>
+    <dd>This will take 2 bytes in dataspace (2 bytes for the pointer). The string literal is now allocated in program space due to the PSTR() macro. A buffer in data space is no longer required.<dd>
+    <dd>The pointer will be initialised with the address of the string in program space. And will get a value in the range 0x0000-0x7FFF (flash area in program space)
+    </dd>
+    <dd>The program must be aware that this is a pointer into program space. The actual string is only accessible through the pgm_read... funtions from the &lt;avr/pgmspace.h&gt; library.
+    <dd>So if you have functions that use pgm_read.. to access the data, then you still need PROGMEM or PSTR when defining the data for these functions.</dd>
+</dl>
 
 <hr>
 <hr>

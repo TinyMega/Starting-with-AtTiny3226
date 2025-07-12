@@ -72,6 +72,15 @@ Using avrdude and an USB-serialport
 
  [See details](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html#FuseBits)
 
- [See full project documentation](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html)
+ ---
+## Who needs PROGMEM
 
+- PROGMEM is no longer required. No more literal strings in SRAM.
+- PROGMEM is supported and still works, but only needed for library functions that use pgm_read..() functions from <avr/pgmspace.h>
+
+ [See details](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html#Progmem)
+
+---
+
+ [See full project documentation](https://tinymega.nl/Projects/GettingStarted-AtTiny3226/StartingTiny3226.html)
 ---
